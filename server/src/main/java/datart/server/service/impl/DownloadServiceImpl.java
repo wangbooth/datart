@@ -78,7 +78,13 @@ public class DownloadServiceImpl extends BaseService implements DownloadService 
         download.setCreateBy(clientId);
         downloadMapper.insert(download);
         requirePermission(download, Const.DOWNLOAD);
-        final String downloadUser = getCurrentUser().getUsername();
+
+        // 20230511 mgp需求：未登录用户也可点击分享页面的下载按钮下载文件
+        String userName = "admin";
+        if (getCurrentUser() != null){
+            userName = getCurrentUser().getUsername();
+        }
+        final String downloadUser = userName;
 
         TaskExecutor.submit(() -> {
 
